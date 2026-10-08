@@ -7,3 +7,6 @@ scipy
 jupyterlab
 ipykernel
 pytest
+statsmodels
+optuna
+ipywidgets
