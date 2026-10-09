@@ -33,6 +33,9 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "B", "UP", "D"]
+# D401 vérifie le mode impératif en anglais : inadapté aux docstrings en français.
+ignore = ["D401"]
+
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
