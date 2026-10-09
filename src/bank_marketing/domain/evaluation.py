@@ -152,3 +152,32 @@ def build_confusion_table(
         index=["Réel : non", "Réel : oui"],
         columns=["Prédit : non", "Prédit : oui"],
     )
+
+
+def select_threshold(strategy: str, y_true: pd.Series, probabilities: np.ndarray) -> float:
+    """Choisit le seuil de décision selon la stratégie demandée.
+
+    Parameters
+    ----------
+    strategy : {"f1", "youden"}
+        Critère d'optimisation du seuil.
+    y_true : pd.Series
+        Cible binaire observée.
+    probabilities : np.ndarray
+        Probabilités prédites, idéalement out-of-fold.
+
+    Returns
+    -------
+    float
+        Seuil de décision retenu.
+
+    Raises
+    ------
+    ValueError
+        Si la stratégie est inconnue.
+    """
+    if strategy == "f1":
+        return find_f1_threshold(y_true, probabilities)
+    if strategy == "youden":
+        return find_youden_threshold(y_true, probabilities)
+    raise ValueError(f"Stratégie de seuil inconnue : {strategy!r} (attendu : 'f1' ou 'youden')")

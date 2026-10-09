@@ -7,6 +7,7 @@ from bank_marketing.domain.evaluation import (
     compute_metrics,
     find_f1_threshold,
     find_youden_threshold,
+    select_threshold,
     summarize_thresholds,
 )
 
@@ -68,3 +69,17 @@ def test_build_confusion_table_counts_each_case(predictions):
     assert table.loc["Réel : non", "Prédit : oui"] == 1
     assert table.loc["Réel : oui", "Prédit : oui"] == 2
     assert table.to_numpy().sum() == 6
+
+
+@pytest.mark.parametrize("strategy", ["f1", "youden"])
+def test_select_threshold_supports_both_strategies(predictions, strategy):
+    y_true, probabilities = predictions
+
+    assert select_threshold(strategy, y_true, probabilities) == 0.6
+
+
+def test_select_threshold_rejects_unknown_strategy(predictions):
+    y_true, probabilities = predictions
+
+    with pytest.raises(ValueError, match="inconnue"):
+        select_threshold("accuracy", y_true, probabilities)
