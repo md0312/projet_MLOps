@@ -48,5 +48,5 @@ def save_dataframe(data: pd.DataFrame, path: Path) -> None:
         Chemin du fichier CSV de destination.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
-    data.to_csv(path, index=False)
+    data.to_csv(path, index=False, lineterminator="\n")
     logger.info("Tableau enregistré dans %s", path)
