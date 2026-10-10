@@ -4,7 +4,7 @@ from matplotlib.figure import Figure
 from sklearn.linear_model import LogisticRegression
 
 from bank_marketing.infrastructure.artifacts import load_model, save_model
-from bank_marketing.infrastructure.config import load_config
+from bank_marketing.infrastructure.config import load_config, save_config
 from bank_marketing.infrastructure.data import load_raw_data, save_dataframe
 from bank_marketing.infrastructure.figures import save_figure
 
@@ -73,3 +73,12 @@ def test_save_figure_writes_png_file(tmp_path):
 
     assert path == tmp_path / "test_figure.png"
     assert path.stat().st_size > 0
+
+
+def test_save_config_then_load_config_returns_same_content(tmp_path):
+    config = {"random_state": 42, "model": {"name": "logistic_regression", "params": {"C": 0.1}}}
+    config_path = tmp_path / "configs" / "tuned.yaml"
+
+    save_config(config, config_path)
+
+    assert load_config(config_path) == config

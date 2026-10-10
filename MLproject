@@ -23,3 +23,9 @@ entry_points:
     parameters:
       config: {type: string, default: configs/config.yaml}
     command: "python -m bank_marketing.application.evaluate --config {config}"
+
+  tune:
+    parameters:
+      config: {type: string, default: configs/config.yaml}
+      n_trials: {type: int, default: 40}
+    command: "python -m bank_marketing.application.tune --config {config} --n-trials {n_trials}"
