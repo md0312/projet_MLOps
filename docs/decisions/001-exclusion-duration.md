@@ -1,4 +1,4 @@
-# ADR 001 — Exclusion de la variable `duration`
+# ADR 001 - Exclusion de la variable `duration`
 
 **Statut :** acceptée
 

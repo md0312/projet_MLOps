@@ -1,4 +1,4 @@
-# ADR 003 — Conservation des modalités `unknown`
+# ADR 003 - Conservation des modalités `unknown`
 
 **Statut :** acceptée
 

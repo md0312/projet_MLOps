@@ -1,4 +1,4 @@
-# ADR 005 — Choix du modèle final : régression logistique
+# ADR 005 - Choix du modèle final : régression logistique
 
 **Statut :** acceptée
 

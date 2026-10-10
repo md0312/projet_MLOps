@@ -1,4 +1,4 @@
-# ADR 002 — Remplacement de `pdays` par `previously_contacted`
+# ADR 002 - Remplacement de `pdays` par `previously_contacted`
 
 **Statut :** acceptée
 

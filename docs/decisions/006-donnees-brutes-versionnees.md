@@ -1,4 +1,4 @@
-# ADR 006 — Versionnement des données brutes dans Git
+# ADR 006 - Versionnement des données brutes dans Git
 
 **Statut :** acceptée
 

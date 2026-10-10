@@ -1,4 +1,4 @@
-# ADR 004 — Métriques d'évaluation et choix du seuil de décision
+# ADR 004 - Métriques d'évaluation et choix du seuil de décision
 
 **Statut :** acceptée
 
