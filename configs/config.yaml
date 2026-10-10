@@ -1,0 +1,26 @@
+# Configuration de l'entraînement du modèle final.
+# Modifier ce fichier permet de changer de modèle ou de paramètres sans
+# toucher au code.
+
+random_state: 42
+
+data:
+  test_size: 0.2            # Part des clients réservée au jeu de test
+
+features:
+  feature_set: complete     # complete | interpretable
+
+cross_validation:
+  n_splits: 5               # Plis utilisés pour les probabilités out-of-fold
+
+model:
+  name: logistic_regression # logistic_regression | random_forest | svm
+  params:                   # Réglage retenu par Optuna (PR-AUC en validation croisée)
+    C: 0.043080746450545805
+    l1_ratio: 0.04212694085665472
+    solver: saga
+    class_weight: balanced
+    max_iter: 5000
+
+threshold:
+  strategy: f1              # f1 | youden : critère de choix du seuil sur les probabilités OOF

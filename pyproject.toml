@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bank-marketing"
+version = "0.1.0"
+description = "Prédiction de la souscription à un dépôt à terme (Bank Marketing) avec une démarche MLOps."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "statsmodels",
+    "optuna",
+    "pyyaml",
+    "joblib",
+    "mlflow",
+    "skops",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+bank_marketing = ["settings/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Avertissements internes à MLflow (code de la librairie, pas du projet).
+filterwarnings = ["ignore::DeprecationWarning:mlflow"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "B", "UP", "D"]
+# D401 vérifie le mode impératif en anglais : inadapté aux docstrings en français.
+ignore = ["D401"]
+
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+"**/__init__.py" = ["D104"]

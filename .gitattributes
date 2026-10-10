@@ -1,0 +1,14 @@
+# Fins de ligne : les fichiers texte sont stockés et extraits avec LF (format
+# Linux/macOS), quel que soit le système. Cela évite les faux diffs entre les
+# membres de l'équipe sous Windows et sous Linux/macOS.
+* text=auto eol=lf
+
+# Scripts Windows : fins de ligne Windows
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Fichiers binaires : jamais convertis
+*.png binary
+*.jpg binary
+*.joblib binary
+*.db binary

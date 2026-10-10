@@ -1,0 +1,2 @@
+threshold,roc_auc,pr_auc,precision,recall,f1
+0.588518,0.772027,0.422627,0.418327,0.581717,0.486674
