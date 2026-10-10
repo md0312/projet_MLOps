@@ -24,3 +24,9 @@ MODELS_DIR = PROJECT_ROOT / "models"
 REPORTS_DIR = PROJECT_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 RESULTS_DIR = REPORTS_DIR / "results"
+
+# Suivi des expériences (MLflow)
+MLFLOW_EXPERIMENT_NAME = "bank-marketing"
+MLFLOW_DB_PATH = PROJECT_ROOT / "mlflow.db"
+MLFLOW_TRACKING_URI = f"sqlite:///{MLFLOW_DB_PATH.as_posix()}"
+MLFLOW_ARTIFACTS_DIR = PROJECT_ROOT / "mlruns"

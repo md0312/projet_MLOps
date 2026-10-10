@@ -1,0 +1,25 @@
+# MLflow Project : points d'entrée du projet, exécutables avec `mlflow run`.
+# Exemple (depuis la racine du projet, environnement déjà installé) :
+#   mlflow run . -e run_pipeline -P config=configs/svm.yaml --env-manager local --experiment-name bank-marketing
+#
+# Le paramètre `config` est de type `string` (et non `path`) : un chemin relatif
+# est transmis tel quel, ce qui évite les problèmes d'espaces dans les chemins
+# absolus sous Windows.
+
+name: bank-marketing
+
+entry_points:
+  run_pipeline:
+    parameters:
+      config: {type: string, default: configs/config.yaml}
+    command: "python -m bank_marketing.application.run_pipeline --config {config}"
+
+  train:
+    parameters:
+      config: {type: string, default: configs/config.yaml}
+    command: "python -m bank_marketing.application.train --config {config}"
+
+  evaluate:
+    parameters:
+      config: {type: string, default: configs/config.yaml}
+    command: "python -m bank_marketing.application.evaluate --config {config}"
