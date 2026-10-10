@@ -10,7 +10,9 @@ import logging
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pandas as pd
+from sklearn.pipeline import Pipeline
 
 from bank_marketing.application.preparation import prepare_train_test
 from bank_marketing.domain.evaluation import compute_metrics, select_threshold
@@ -28,6 +30,53 @@ from bank_marketing.settings.logging_setup import configure_logging
 logger = logging.getLogger(__name__)
 
 DEFAULT_MODEL_PATH = MODELS_DIR / "model.joblib"
+
+
+def build_pipeline_from_config(config: dict[str, Any], features: pd.DataFrame) -> Pipeline:
+    """Construit le pipeline décrit par la section ``model`` de la configuration.
+
+    Parameters
+    ----------
+    config : dict[str, Any]
+        Configuration du projet.
+    features : pd.DataFrame
+        Variables explicatives, utilisées pour identifier le type des colonnes.
+
+    Returns
+    -------
+    Pipeline
+        Pipeline non entraîné.
+    """
+    model_config = config["model"]
+    return build_pipeline(
+        features, model_config["name"], model_config["params"], config["random_state"]
+    )
+
+
+def compute_config_oof_probabilities(
+    config: dict[str, Any], x_train: pd.DataFrame, y_train: pd.Series
+) -> np.ndarray:
+    """Calcule les probabilités out-of-fold du modèle décrit par la configuration.
+
+    Parameters
+    ----------
+    config : dict[str, Any]
+        Configuration du projet (modèle, graine et nombre de plis).
+    x_train : pd.DataFrame
+        Variables explicatives d'entraînement.
+    y_train : pd.Series
+        Cible d'entraînement.
+
+    Returns
+    -------
+    np.ndarray
+        Probabilité de souscription out-of-fold pour chaque observation.
+    """
+    cross_validation = create_cross_validation(
+        config["cross_validation"]["n_splits"], config["random_state"]
+    )
+    pipeline = build_pipeline_from_config(config, x_train)
+    return compute_oof_probabilities(pipeline, x_train, y_train, cross_validation)
 
 
 def run_training(
@@ -55,15 +104,9 @@ def run_training(
         Seuil retenu et métriques out-of-fold à ce seuil.
     """
     x_train, _, y_train, _ = prepare_train_test(config)
-    model_config = config["model"]
-    pipeline = build_pipeline(
-        x_train, model_config["name"], model_config["params"], config["random_state"]
-    )
+    pipeline = build_pipeline_from_config(config, x_train)
 
-    cross_validation = create_cross_validation(
-        config["cross_validation"]["n_splits"], config["random_state"]
-    )
-    oof_probabilities = compute_oof_probabilities(pipeline, x_train, y_train, cross_validation)
+    oof_probabilities = compute_config_oof_probabilities(config, x_train, y_train)
     threshold = select_threshold(config["threshold"]["strategy"], y_train, oof_probabilities)
     oof_metrics = compute_metrics(y_train, oof_probabilities, threshold)
     logger.info("Seuil retenu : %.3f | F1 OOF : %.3f", threshold, oof_metrics["f1"])
