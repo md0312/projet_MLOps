@@ -1,10 +1,12 @@
 import pandas as pd
 import pytest
+from matplotlib.figure import Figure
 from sklearn.linear_model import LogisticRegression
 
 from bank_marketing.infrastructure.artifacts import load_model, save_model
 from bank_marketing.infrastructure.config import load_config
 from bank_marketing.infrastructure.data import load_raw_data, save_dataframe
+from bank_marketing.infrastructure.figures import save_figure
 
 
 def test_load_raw_data_reads_semicolon_separated_file(tmp_path):
@@ -61,3 +63,13 @@ def test_load_config_returns_dictionary(tmp_path):
     config = load_config(config_path)
 
     assert config == {"random_state": 42, "model": {"name": "logistic_regression"}}
+
+
+def test_save_figure_writes_png_file(tmp_path):
+    figure = Figure()
+    figure.subplots().plot([0, 1], [0, 1])
+
+    path = save_figure(figure, "test_figure", directory=tmp_path)
+
+    assert path == tmp_path / "test_figure.png"
+    assert path.stat().st_size > 0
