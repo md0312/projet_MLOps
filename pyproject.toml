@@ -16,6 +16,8 @@ dependencies = [
     "optuna",
     "pyyaml",
     "joblib",
+    "mlflow",
+    "skops",
 ]
 
 [tool.setuptools.packages.find]
@@ -26,6 +28,8 @@ bank_marketing = ["settings/*.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Avertissements internes à MLflow (code de la librairie, pas du projet).
+filterwarnings = ["ignore::DeprecationWarning:mlflow"]
 
 [tool.ruff]
 line-length = 100

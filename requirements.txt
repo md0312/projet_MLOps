@@ -16,6 +16,10 @@ joblib==1.6.0
 # Configuration
 PyYAML==6.0.3
 
+# Suivi des expériences
+mlflow==3.17.0
+skops==0.16.0
+
 # Visualisation
 matplotlib==3.11.2
 seaborn==0.13.2

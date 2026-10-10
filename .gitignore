@@ -28,4 +28,7 @@ models/*
 !models/.gitkeep
 mlruns/
 mlartifacts/
+mlruns/
+mlartifacts/
+mlflow.db
 *.log
