@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Any
 
 import mlflow
+import mlflow
+import pandas as pd
+import skops.io
 import skops.io
 from sklearn.base import BaseEstimator
 
@@ -121,3 +124,57 @@ def list_types_to_trust(model: BaseEstimator) -> list[str]:
         Noms complets des types à transmettre à ``skops_trusted_types``.
     """
     return skops.io.get_untrusted_types(data=skops.io.dumps(model))
+
+
+def get_tuning_trials(
+    model_name: str, experiment_name: str = MLFLOW_EXPERIMENT_NAME
+) -> pd.DataFrame:
+    """Récupère les essais de la dernière optimisation Optuna d'un modèle.
+
+    MLflow doit avoir été configuré au préalable (voir :func:`setup_mlflow`).
+
+    Parameters
+    ----------
+    model_name : str
+        Famille de modèle optimisée (par exemple ``"logistic_regression"``).
+    experiment_name : str, optional
+        Nom de l'expérience MLflow.
+
+    Returns
+    -------
+    pd.DataFrame
+        Un essai par ligne : numéro, PR-AUC out-of-fold et hyperparamètres
+        testés. Tableau vide si aucune optimisation n'a été enregistrée.
+    """
+    experiment = mlflow.get_experiment_by_name(experiment_name)
+    if experiment is None:
+        return pd.DataFrame()
+
+    tuning_runs = mlflow.search_runs(
+        experiment_ids=[experiment.experiment_id],
+        filter_string=f"tags.mlflow.runName = 'tuning_{model_name}'",
+        order_by=["start_time DESC"],
+        max_results=1,
+    )
+    if tuning_runs.empty:
+        return pd.DataFrame()
+
+    trials = mlflow.search_runs(
+        experiment_ids=[experiment.experiment_id],
+        filter_string=f"tags.mlflow.parentRunId = '{tuning_runs.loc[0, 'run_id']}'",
+    )
+    # MLflow nomme les colonnes "params.C", "metrics.oof_pr_auc", etc. :
+    # on ne garde que le nom du paramètre ou de la métrique.
+    param_names = [
+        column.removeprefix("params.") for column in trials.columns if column.startswith("params.")
+    ]
+    return (
+        trials.rename(columns=lambda column: column.removeprefix("params."))
+        .assign(
+            trial=trials["tags.mlflow.runName"].str.removeprefix("trial_").astype(int),
+            oof_pr_auc=trials["metrics.oof_pr_auc"],
+        )
+        .astype(dict.fromkeys(param_names, float))
+        .sort_values("trial")
+        .reset_index(drop=True)[["trial", "oof_pr_auc", *param_names]]
+    )
