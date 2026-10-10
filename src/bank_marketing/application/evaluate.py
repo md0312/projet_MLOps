@@ -54,7 +54,8 @@ def run_evaluation(
     logger.info("F1 test : %.3f | rappel : %.3f", test_metrics["f1"], test_metrics["recall"])
 
     results = {"threshold": threshold, **test_metrics}
-    save_dataframe(pd.DataFrame([results]), results_dir / "test_metrics.csv")
+    # Arrondi à 6 décimales : évite des écarts infimes entre systèmes d'exploitation.
+    save_dataframe(pd.DataFrame([results]).round(6), results_dir / "test_metrics.csv")
     save_dataframe(confusion.reset_index(names="reel"), results_dir / "test_confusion_matrix.csv")
     return results
 

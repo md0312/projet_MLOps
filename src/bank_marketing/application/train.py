@@ -115,7 +115,8 @@ def run_training(
     save_model(pipeline, threshold, model_path)
 
     results = {"threshold": threshold, **oof_metrics}
-    save_dataframe(pd.DataFrame([results]), results_dir / "train_oof_metrics.csv")
+    # Arrondi à 6 décimales : évite des écarts infimes entre systèmes d'exploitation.
+    save_dataframe(pd.DataFrame([results]).round(6), results_dir / "train_oof_metrics.csv")
     return results
 
 

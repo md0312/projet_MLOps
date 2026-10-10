@@ -26,7 +26,7 @@ taux de souscription d'un appel au hasard (11 %).
 
 ## Installation
 
-Prérequis : **Python 3.14** et Git.
+Prérequis : **Python 3.12 ou plus récent** (projet testé avec Python 3.14) et Git.
 
 ```bash
 git clone https://github.com/md0312/projet_MLOps.git
@@ -208,4 +208,4 @@ portugaise (2008-2010).
 
 - **Dargus MWETE**
 - **Josue KANTENG-A-MUKOJ**
-- **MOUSSA MENHOUK**
+- **Moussa MENHOUK**
