@@ -181,3 +181,21 @@ def select_threshold(strategy: str, y_true: pd.Series, probabilities: np.ndarray
     if strategy == "youden":
         return find_youden_threshold(y_true, probabilities)
     raise ValueError(f"Stratégie de seuil inconnue : {strategy!r} (attendu : 'f1' ou 'youden')")
+
+
+def summarize_seed_results(seed_results: pd.DataFrame) -> pd.DataFrame:
+    """Résume la dispersion des métriques obtenues avec plusieurs graines.
+
+    Parameters
+    ----------
+    seed_results : pd.DataFrame
+        Une ligne par graine, une colonne par métrique.
+
+    Returns
+    -------
+    pd.DataFrame
+        Une ligne par métrique : moyenne, écart-type, minimum et maximum.
+    """
+    summary = seed_results.agg(["mean", "std", "min", "max"]).T
+    summary.columns = ["moyenne", "ecart_type", "minimum", "maximum"]
+    return summary.round(3)

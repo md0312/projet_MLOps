@@ -6,8 +6,9 @@ PYTHON = python
 SOURCES = src tests
 CONFIG = configs/config.yaml
 N_TRIALS = 40
+N_SEEDS = 10
 
-.PHONY: install lint format test coverage train evaluate pipeline compare tune ui
+.PHONY: install lint format test coverage train evaluate pipeline compare tune robustness ui
 
 install:  ## Installe l'environnement et le package
 	$(PYTHON) -m pip install -r requirements.txt
@@ -43,6 +44,9 @@ compare:  ## Enregistre la baseline et les trois modèles candidats dans MLflow
 
 tune:  ## Optimise les hyperparamètres avec Optuna
 	$(PYTHON) -m bank_marketing.application.tune --config $(CONFIG) --n-trials $(N_TRIALS)
+
+robustness:  ## Mesure la sensibilité des résultats à la graine aléatoire
+	$(PYTHON) -m bank_marketing.application.robustness --config $(CONFIG) --n-seeds $(N_SEEDS)
 
 ui:  ## Lance l'interface MLflow (http://127.0.0.1:5000)
 	mlflow ui

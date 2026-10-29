@@ -29,3 +29,9 @@ entry_points:
       config: {type: string, default: configs/config.yaml}
       n_trials: {type: int, default: 40}
     command: "python -m bank_marketing.application.tune --config {config} --n-trials {n_trials}"
+
+  robustness:
+    parameters:
+      config: {type: string, default: configs/config.yaml}
+      n_seeds: {type: int, default: 10}
+    command: "python -m bank_marketing.application.robustness --config {config} --n-seeds {n_seeds}"

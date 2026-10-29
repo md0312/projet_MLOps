@@ -8,6 +8,7 @@ from bank_marketing.domain.evaluation import (
     find_f1_threshold,
     find_youden_threshold,
     select_threshold,
+    summarize_seed_results,
     summarize_thresholds,
 )
 
@@ -83,3 +84,16 @@ def test_select_threshold_rejects_unknown_strategy(predictions):
 
     with pytest.raises(ValueError, match="inconnue"):
         select_threshold("accuracy", y_true, probabilities)
+
+
+def test_summarize_seed_results_computes_dispersion():
+    seed_results = pd.DataFrame({"test_f1": [0.4, 0.5, 0.6]})
+
+    summary = summarize_seed_results(seed_results)
+
+    assert summary.loc["test_f1"].to_dict() == {
+        "moyenne": 0.5,
+        "ecart_type": 0.1,
+        "minimum": 0.4,
+        "maximum": 0.6,
+    }

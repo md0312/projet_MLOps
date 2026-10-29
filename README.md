@@ -28,6 +28,12 @@ Par comparaison, une baseline sans variable explicative (`configs/baseline.yaml`
 revient à appeler tous les clients, obtient une PR-AUC de 0,109 et un F1 de 0,197 sur le
 jeu de test.
 
+Ces résultats sont **robustes à la graine aléatoire** : sur 10 graines différentes
+(découpage, validation croisée et seuil recalculés à chaque fois), le F1 de test vaut
+**0,478 ± 0,022** (de 0,445 à 0,522) et la PR-AUC de test **0,420 ± 0,024**. Le F1 de
+0,485 obtenu avec la graine du projet est donc représentatif (`make robustness`,
+`reports/results/seed_robustness_summary.csv`).
+
 ## Installation
 
 Prérequis : **Python 3.12 ou plus récent** (projet testé avec Python 3.14) et Git.
@@ -73,6 +79,7 @@ commande Python, utilisable directement si `make` n'est pas installé.
 | `make pipeline` | `python -m bank_marketing.application.run_pipeline` | Entraîne et évalue, avec suivi MLflow |
 | `make compare` | `run_pipeline` sur les quatre configurations | Enregistre la baseline et les trois modèles dans MLflow |
 | `make tune` | `python -m bank_marketing.application.tune` | Optimise les hyperparamètres avec Optuna |
+| `make robustness` | `python -m bank_marketing.application.robustness` | Relance le pipeline avec 10 graines et mesure la dispersion |
 | `make ui` | `mlflow ui` | Ouvre l'interface MLflow sur http://127.0.0.1:5000 |
 
 Les commandes utilisent `configs/config.yaml` par défaut. Pour une autre configuration :
@@ -155,7 +162,7 @@ projet_MLOps/
 │   ├── settings/             Chemins, logging, paramètres MLflow
 │   ├── infrastructure/       Lecture et écriture des fichiers
 │   ├── domain/               Logique métier : prétraitement, modèles, évaluation
-│   └── application/          Scripts : train, evaluate, run_pipeline, tune
+│   └── application/          Scripts : train, evaluate, run_pipeline, tune, robustness
 ├── tests/
 │   ├── unit/                 Tests d'une fonction isolée
 │   └── integration/          Tests de plusieurs couches ensemble, sur les vraies données
