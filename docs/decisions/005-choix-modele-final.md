@@ -12,6 +12,11 @@ d'entraînement (voir `notebooks/02_modeling.ipynb`) :
 | Régression logistique (elastic net) | 0,423 | 0,589 | 0,487 |
 | Forêt aléatoire | 0,436 | 0,639 | 0,484 |
 | SVM RBF calibré | 0,345 | 0,234 | 0,473 |
+| *Baseline (taux de souscription constant)* | *0,109* | *0,109* | *0,197* |
+
+La baseline (`configs/baseline.yaml`) prédit le même taux de souscription pour tous
+les clients, ce qui revient à les appeler tous : elle fixe le niveau minimal à dépasser.
+Les trois modèles font nettement mieux, avec une PR-AUC environ quatre fois plus élevée.
 
 Les hyperparamètres de la régression logistique et de la forêt aléatoire ont été
 optimisés avec Optuna (PR-AUC en validation croisée). Une nouvelle optimisation

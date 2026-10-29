@@ -35,7 +35,8 @@ evaluate:  ## Évalue le modèle sur le jeu de test
 pipeline:  ## Entraîne et évalue un modèle suivi dans MLflow
 	$(PYTHON) -m bank_marketing.application.run_pipeline --config $(CONFIG)
 
-compare:  ## Enregistre les trois modèles candidats dans MLflow
+compare:  ## Enregistre la baseline et les trois modèles candidats dans MLflow
+	$(PYTHON) -m bank_marketing.application.run_pipeline --config configs/baseline.yaml
 	$(PYTHON) -m bank_marketing.application.run_pipeline --config configs/config.yaml
 	$(PYTHON) -m bank_marketing.application.run_pipeline --config configs/random_forest.yaml
 	$(PYTHON) -m bank_marketing.application.run_pipeline --config configs/svm.yaml

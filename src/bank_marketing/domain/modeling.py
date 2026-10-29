@@ -3,6 +3,8 @@
 Trois familles de modèles ont été comparées lors de l'exploration : régression
 logistique, forêt aléatoire et SVM calibré. Toutes compensent le déséquilibre
 de la cible avec ``class_weight="balanced"``, précisé dans la configuration.
+Une baseline, qui prédit le même taux de souscription pour tous les clients, sert
+de point de comparaison.
 """
 
 import logging
@@ -12,6 +14,7 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.calibration import CalibratedClassifierCV
+from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold, cross_val_predict
@@ -22,7 +25,7 @@ from bank_marketing.domain.preprocessing import create_preprocessor
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_MODELS = ("logistic_regression", "random_forest", "svm")
+SUPPORTED_MODELS = ("baseline", "logistic_regression", "random_forest", "svm")
 
 
 def build_estimator(model_name: str, params: dict[str, Any], random_state: int) -> BaseEstimator:
@@ -30,7 +33,7 @@ def build_estimator(model_name: str, params: dict[str, Any], random_state: int) 
 
     Parameters
     ----------
-    model_name : {"logistic_regression", "random_forest", "svm"}
+    model_name : {"baseline", "logistic_regression", "random_forest", "svm"}
         Famille de modèle.
     params : dict[str, Any]
         Hyperparamètres transmis au classifieur scikit-learn.
@@ -47,6 +50,10 @@ def build_estimator(model_name: str, params: dict[str, Any], random_state: int) 
     ValueError
         Si le nom du modèle n'est pas pris en charge.
     """
+    if model_name == "baseline":
+        # Prédit pour chaque client le taux de souscription observé à l'entraînement :
+        # toute variable explicative utile doit faire mieux que ce modèle.
+        return DummyClassifier(**params)
     if model_name == "logistic_regression":
         return LogisticRegression(**params, random_state=random_state)
     if model_name == "random_forest":

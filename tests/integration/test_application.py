@@ -21,7 +21,9 @@ def test_training_then_evaluation_reproduce_exploration_results(tmp_path):
     assert (tmp_path / "test_confusion_matrix.csv").is_file()
 
 
-@pytest.mark.parametrize("config_name", ["config.yaml", "random_forest.yaml", "svm.yaml"])
+@pytest.mark.parametrize(
+    "config_name", ["baseline.yaml", "config.yaml", "random_forest.yaml", "svm.yaml"]
+)
 def test_every_configuration_produces_valid_oof_probabilities(config_name):
     config = load_config(CONFIGS_DIR / config_name)
     x_train, _, y_train, _ = prepare_train_test(config)
@@ -30,3 +32,14 @@ def test_every_configuration_produces_valid_oof_probabilities(config_name):
 
     assert probabilities.shape == (len(y_train),)
     assert ((probabilities >= 0) & (probabilities <= 1)).all()
+
+
+def test_final_model_beats_baseline(tmp_path):
+    baseline_config = load_config(CONFIGS_DIR / "baseline.yaml")
+    final_config = load_config(DEFAULT_CONFIG_PATH)
+
+    baseline = run_training(baseline_config, tmp_path / "baseline.joblib", tmp_path / "baseline")
+    final = run_training(final_config, tmp_path / "final.joblib", tmp_path / "final")
+
+    assert final["pr_auc"] > 2 * baseline["pr_auc"]
+    assert final["f1"] > baseline["f1"]

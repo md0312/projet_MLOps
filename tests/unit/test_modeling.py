@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from sklearn.calibration import CalibratedClassifierCV
+from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
@@ -30,6 +31,7 @@ def training_sample():
 @pytest.mark.parametrize(
     ("model_name", "params", "expected_type"),
     [
+        ("baseline", {"strategy": "prior"}, DummyClassifier),
         ("logistic_regression", {"C": 0.5}, LogisticRegression),
         ("random_forest", {"n_estimators": 10}, RandomForestClassifier),
         ("svm", {"C": 1.0}, CalibratedClassifierCV),

@@ -1,0 +1,23 @@
+# Configuration de référence : baseline sans variable explicative.
+# Elle prédit le même taux de souscription pour tous les clients et donne le niveau
+# minimal que les modèles doivent dépasser.
+# Usage : python -m bank_marketing.application.run_pipeline --config configs/baseline.yaml
+
+random_state: 42
+
+data:
+  test_size: 0.2
+
+features:
+  feature_set: complete
+
+cross_validation:
+  n_splits: 5
+
+model:
+  name: baseline
+  params:
+    strategy: prior
+
+threshold:
+  strategy: f1

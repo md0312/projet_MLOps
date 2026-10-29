@@ -24,6 +24,10 @@ En appelant uniquement les clients ciblés par le modèle (13 % du jeu de test),
 atteindrait 53 % des souscripteurs avec une précision de 44 %, soit environ **4 fois** le
 taux de souscription d'un appel au hasard (11 %).
 
+Par comparaison, une baseline sans variable explicative (`configs/baseline.yaml`), qui
+revient à appeler tous les clients, obtient une PR-AUC de 0,109 et un F1 de 0,197 sur le
+jeu de test.
+
 ## Installation
 
 Prérequis : **Python 3.12 ou plus récent** (projet testé avec Python 3.14) et Git.
@@ -67,7 +71,7 @@ commande Python, utilisable directement si `make` n'est pas installé.
 | `make train` | `python -m bank_marketing.application.train` | Entraîne le modèle et choisit son seuil |
 | `make evaluate` | `python -m bank_marketing.application.evaluate` | Évalue le modèle sur le jeu de test |
 | `make pipeline` | `python -m bank_marketing.application.run_pipeline` | Entraîne et évalue, avec suivi MLflow |
-| `make compare` | `run_pipeline` sur les trois configurations | Enregistre les trois modèles dans MLflow |
+| `make compare` | `run_pipeline` sur les quatre configurations | Enregistre la baseline et les trois modèles dans MLflow |
 | `make tune` | `python -m bank_marketing.application.tune` | Optimise les hyperparamètres avec Optuna |
 | `make ui` | `mlflow ui` | Ouvre l'interface MLflow sur http://127.0.0.1:5000 |
 
@@ -124,6 +128,7 @@ sans modifier le code.
 | `configs/config.yaml` | Régression logistique, **modèle final** |
 | `configs/random_forest.yaml` | Forêt aléatoire, candidat comparé |
 | `configs/svm.yaml` | SVM à noyau RBF calibré, candidat comparé |
+| `configs/baseline.yaml` | Baseline sans variable explicative, niveau minimal à dépasser |
 
 Chaque fichier précise la graine aléatoire, la part du jeu de test, le jeu de variables
 (`complete` ou `interpretable`), le nombre de plis de validation croisée, le modèle et ses
