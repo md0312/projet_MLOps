@@ -1,0 +1,12 @@
+metrique,moyenne,ecart_type,minimum,maximum
+threshold,0.629,0.02,0.602,0.67
+oof_roc_auc,0.769,0.008,0.758,0.782
+oof_pr_auc,0.414,0.008,0.404,0.43
+oof_precision,0.43,0.01,0.42,0.453
+oof_recall,0.547,0.018,0.521,0.582
+oof_f1,0.481,0.007,0.474,0.496
+test_roc_auc,0.774,0.027,0.73,0.809
+test_pr_auc,0.42,0.024,0.38,0.459
+test_precision,0.43,0.038,0.377,0.511
+test_recall,0.541,0.026,0.511,0.589
+test_f1,0.478,0.022,0.445,0.522

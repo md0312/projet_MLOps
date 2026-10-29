@@ -1,9 +1,32 @@
-__pycache__/
-*.pyc
-
+# Environnements virtuels
 .venv/
 venv/
+.env
 
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Tests et qualité du code
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# Notebooks
 .ipynb_checkpoints/
 
-.env
+# Éditeurs
+.vscode/
+.idea/
+
+# Artefacts produits par le projet
+models/*
+!models/.gitkeep
+mlruns/
+mlartifacts/
+mlflow.db
+*.log
