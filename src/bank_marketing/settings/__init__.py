@@ -27,6 +27,7 @@ RESULTS_DIR = REPORTS_DIR / "results"
 
 # Suivi des expériences (MLflow)
 MLFLOW_EXPERIMENT_NAME = "bank-marketing"
+MLFLOW_REGISTERED_MODEL_NAME = "bank-marketing-classifier"
 MLFLOW_DB_PATH = PROJECT_ROOT / "mlflow.db"
 MLFLOW_TRACKING_URI = f"sqlite:///{MLFLOW_DB_PATH.as_posix()}"
 MLFLOW_ARTIFACTS_DIR = PROJECT_ROOT / "mlruns"

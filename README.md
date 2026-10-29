@@ -103,6 +103,11 @@ Dans l'interface, choisir le mode **Model training**, puis l'expérience
 test, les fichiers de résultats et le modèle. Les optimisations Optuna apparaissent sous
 la forme d'un run parent contenant un run par essai.
 
+Chaque run enregistre aussi son modèle comme nouvelle version de
+**bank-marketing-classifier** dans le registre de modèles (onglet **Models**). Le seuil
+de décision et le nom du modèle sont conservés comme étiquettes (`threshold`,
+`model_name`) de chaque version.
+
 Les points d'entrée sont aussi déclarés dans le fichier `MLproject` :
 
 ```bash

@@ -1,7 +1,8 @@
 """Pipeline complet suivi par MLflow : entraînement, évaluation et enregistrement.
 
 Chaque exécution crée un run MLflow contenant la configuration, les métriques
-out-of-fold et de test, les fichiers de résultats et le modèle entraîné.
+out-of-fold et de test, les fichiers de résultats et le modèle entraîné. Le modèle
+est aussi enregistré comme nouvelle version dans le registre de modèles MLflow.
 
 Usage
 -----
@@ -30,7 +31,7 @@ from bank_marketing.application.preparation import prepare_train_test
 from bank_marketing.application.train import run_training
 from bank_marketing.infrastructure.artifacts import load_model
 from bank_marketing.infrastructure.config import load_config
-from bank_marketing.settings import DEFAULT_CONFIG_PATH
+from bank_marketing.settings import DEFAULT_CONFIG_PATH, MLFLOW_REGISTERED_MODEL_NAME
 from bank_marketing.settings.logging_setup import configure_logging
 
 logger = logging.getLogger(__name__)
@@ -74,7 +75,7 @@ def run_pipeline(config: dict[str, Any], config_path: Path) -> str:
         for csv_file in output_dir.glob("*.csv"):
             mlflow.log_artifact(str(csv_file), artifact_path="results")
 
-        model, _ = load_model(model_path)
+        model, threshold = load_model(model_path)
         _, x_test, _, _ = prepare_train_test(config)
         # La signature décrit les colonnes attendues par le modèle. MLflow avertit
         # que les colonnes entières ne peuvent pas contenir de valeurs manquantes :
@@ -82,11 +83,20 @@ def run_pipeline(config: dict[str, Any], config_path: Path) -> str:
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", message="Hint: Inferred schema contains integer")
             signature = infer_signature(x_test, model.predict_proba(x_test)[:, 1])
-        mlflow.sklearn.log_model(
+        model_info = mlflow.sklearn.log_model(
             model,
             name="model",
             signature=signature,
             skops_trusted_types=list_types_to_trust(model),
+            registered_model_name=MLFLOW_REGISTERED_MODEL_NAME,
+        )
+        # Le registre ne connaît que le modèle, qui prédit avec un seuil de 0,5 :
+        # le seuil retenu est donc conservé comme étiquette de la version.
+        version = model_info.registered_model_version
+        client = mlflow.MlflowClient()
+        client.set_model_version_tag(MLFLOW_REGISTERED_MODEL_NAME, version, "threshold", threshold)
+        client.set_model_version_tag(
+            MLFLOW_REGISTERED_MODEL_NAME, version, "model_name", config["model"]["name"]
         )
 
         logger.info("Run MLflow terminé : %s", run.info.run_id)
