@@ -24,7 +24,7 @@ test:  ## Lance tous les tests
 	pytest
 
 coverage:  ## Lance les tests et mesure la couverture du code
-	pytest --cov=bank_marketing --cov-report=term-missing
+	pytest --cov=bank_marketing --cov-report=term-missing --cov-fail-under=80
 
 train:  ## Entraîne le modèle et choisit son seuil
 	$(PYTHON) -m bank_marketing.application.train --config $(CONFIG)

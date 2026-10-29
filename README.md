@@ -181,7 +181,8 @@ Les variables sont décrites dans le [dictionnaire des données](docs/data/dicti
 
 ## Qualité du code
 
-- **Tests :** 60 tests unitaires et d'intégration, couverture de 93 % (`make coverage`).
+- *- **Tests :** 60 tests unitaires et d'intégration, couverture de 93 % (`make coverage`).
+  La CI échoue si la couverture descend sous 80 %.
 - **Style :** `ruff` vérifie la conformité PEP 8, l'ordre des imports, les conventions de
   nommage et la présence de docstrings au format NumPy.
 - **Logging :** le module `logging` remplace les `print`.
