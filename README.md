@@ -103,7 +103,7 @@ identiques d'une machine à l'autre.
 ### Suivi des expériences avec MLflow
 
 ```bash
-make compare                                  # les trois modèles candidats
+make compare                                  # la baseline et les trois modèles candidats
 make tune                                     # optimisation de la régression logistique
 make tune CONFIG=configs/random_forest.yaml   # optimisation de la forêt aléatoire
 make ui
@@ -114,10 +114,21 @@ Dans l'interface, choisir le mode **Model training**, puis l'expérience
 test, les fichiers de résultats et le modèle. Les optimisations Optuna apparaissent sous
 la forme d'un run parent contenant un run par essai.
 
+![Liste des runs de l'expérience bank-marketing dans MLflow](docs/images/mlflow_accueil_runs.png)
+
 Chaque run enregistre aussi son modèle comme nouvelle version de
 **bank-marketing-classifier** dans le registre de modèles (onglet **Models**). Le seuil
 de décision et le nom du modèle sont conservés comme étiquettes (`threshold`,
 `model_name`) de chaque version.
+
+Comparaison des quatre runs de `make compare` (vue *Compare* de MLflow) :
+
+![Comparaison des runs dans MLflow](docs/images/mlflow_comparaison_runs.png)
+
+Registre de modèles : une version par run, avec son seuil et son nom en étiquettes. La
+régression logistique est désignée comme modèle officiel par l'alias `champion` :
+
+![Registre de modèles MLflow](docs/images/mlflow_registre_champion.png)
 
 Les points d'entrée sont aussi déclarés dans le fichier `MLproject` :
 
