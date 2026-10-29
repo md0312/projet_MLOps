@@ -195,6 +195,10 @@ Les variables sont décrites dans le [dictionnaire des données](docs/data/dicti
   La CI échoue si la couverture descend sous 80 %.
 - **Style :** `ruff` vérifie la conformité PEP 8, l'ordre des imports, les conventions de
   nommage et la présence de docstrings au format NumPy.
+- **Validation des données :** à chaque chargement, les données brutes sont comparées à un
+  schéma de contraintes (colonnes, types, intervalles, modalités). Les lignes non conformes
+  sont écartées, et le traitement s'arrête si elles dépassent 5 % du fichier
+  (`domain/validation.py`).
 - **Logging :** le module `logging` remplace les `print`.
 - **Reproductibilité :** versions des librairies fixées, graines aléatoires fixées,
   fins de ligne normalisées (`.gitattributes`).

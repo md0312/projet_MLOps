@@ -3,6 +3,7 @@ from bank_marketing.domain.preprocessing import (
     create_preprocessor,
     split_train_test,
 )
+from bank_marketing.domain.validation import validate_raw_data
 from bank_marketing.infrastructure.data import load_raw_data
 
 
@@ -16,3 +17,9 @@ def test_preprocessing_on_real_data_matches_exploration():
     assert round(target.mean(), 4) == 0.1095
     assert (len(x_train), len(x_test)) == (3295, 824)
     assert preprocessor.transform(x_test).shape == (824, 62)
+
+
+def test_real_data_respects_validation_schema():
+    raw_data = load_raw_data()
+
+    assert len(validate_raw_data(raw_data)) == len(raw_data) == 4119
