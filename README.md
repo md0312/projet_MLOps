@@ -237,6 +237,38 @@ S. Moro, P. Cortez et P. Rita (2014), *A Data-Driven Approach to Predict the Suc
 Bank Telemarketing*, Decision Support Systems. Échantillon de 4 119 clients d'une banque
 portugaise (2008-2010).
 
+## Limites et perspectives
+
+Le projet couvre l'industrialisation d'un modèle entraîné sur un jeu de données fixe. Une
+mise en production réelle demanderait les étapes suivantes du cycle de vie des modèles.
+
+**Limites des résultats**
+
+- **Pas de validation chronologique.** Le fichier est un échantillon de 10 % tiré au
+  hasard, sans ordre temporel exploitable : le découpage est stratifié aléatoire. En
+  production, il faudrait entraîner sur les campagnes passées et tester sur les suivantes.
+- **Écarts entre modèles peu significatifs.** Selon la graine, le F1 de test varie de
+  ± 0,022 : la petite avance de la forêt aléatoire en PR-AUC reste dans cette marge, ce
+  qui justifie de privilégier l'interprétabilité.
+- **Seuil fixé sans coût métier.** Le seuil maximise le F1. Avec le coût réel d'un appel
+  et le gain d'une souscription, il pourrait être choisi pour maximiser le gain attendu.
+
+**Perspectives d'industrialisation**
+
+- **Conteneurisation :** livrer le modèle et ses dépendances dans une image Docker, ce
+  qui garantit le même environnement en développement et en production.
+- **Exposition :** servir le modèle du registre (alias `champion`) via une API ou une
+  application web, qui appliquerait le seuil enregistré avec la version.
+- **Surveillance et dérive :** suivre la distribution des variables et le taux de
+  souscription observé, avec des tests statistiques pour déclencher une alerte quand les
+  données s'écartent de celles de l'entraînement.
+- **Ré-entraînement :** relancer le pipeline sur les nouvelles campagnes (de façon
+  planifiée ou après une alerte) et ne promouvoir la nouvelle version que si elle bat le
+  `champion` actuel.
+- **Validation avant mise en service :** comparer l'ancien et le nouveau modèle en
+  *shadow deployment* (prédictions du nouveau modèle enregistrées sans être utilisées)
+  avant de basculer l'alias `champion`.
+
 ## Équipe
 
 - **Dargus MWETE**
